@@ -1,0 +1,1508 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ITPROFEL3 - Advanced Web Applications</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    
+    :root {
+      --bg-primary: #0a0e27;
+      --bg-secondary: #1a1f3a;
+      --text-primary: #f0f4f8;
+      --accent-primary: #00d4ff;
+      --accent-secondary: #7c3aed;
+    }
+    
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #1a0033 100%);
+      color: var(--text-primary);
+      overflow-y: auto;
+    }
+    
+    .code-font {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid rgba(0, 212, 255, 0.1);
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      border-color: rgba(0, 212, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.15);
+      transform: translateY(-4px);
+    }
+    
+    .lesson-link {
+      display: block;
+      padding: 1rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(124, 58, 237, 0.1));
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .lesson-link:hover {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.2));
+      border-color: rgba(0, 212, 255, 0.4);
+      transform: translateX(8px);
+      box-shadow: 0 8px 24px rgba(0, 212, 255, 0.1);
+    }
+    
+    .week-label {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .code-block {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    
+    .code-block pre {
+      margin: 0;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    
+    .nav-tab {
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+    
+    .nav-tab:hover {
+      background: rgba(56, 189, 248, 0.1);
+    }
+    
+    .nav-tab.active {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+      color: var(--accent-primary);
+    }
+    
+    .highlight-keyword { color: #ff7b72; }
+    .highlight-string { color: #a5d6ff; }
+    .highlight-function { color: #d2a8ff; }
+    .highlight-comment { color: #8b949e; }
+    .highlight-tag { color: #7ee787; }
+    .highlight-attr { color: #79c0ff; }
+    .highlight-value { color: #ffa657; }
+    
+    .activity-card {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(129, 140, 248, 0.05));
+      border: 2px dashed rgba(56, 189, 248, 0.3);
+    }
+    
+    .demo-container {
+      background: white;
+      color: #1f2937;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .progress-bar {
+      height: 4px;
+      background: rgba(56, 189, 248, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      transition: width 0.3s ease;
+    }
+    
+    .tooltip {
+      position: relative;
+    }
+    
+    .tooltip-text {
+      visibility: hidden;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-secondary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+    }
+    
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .accordion-content.open {
+      max-height: 2000px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .section-content {
+      display: none;
+    }
+    
+    .section-content.active {
+      display: block;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto">
+  <div class="w-full min-h-full"><!-- Header -->
+   <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/80 border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+     <div class="flex items-center justify-between">
+      <div>
+       <p class="text-sm text-slate-400 mb-1">Advanced Web Development Course</p>
+       <h1 id="course-title" class="text-3xl font-bold gradient-text">ITPROFEL3 - Advanced Web Applications</h1>
+      </div>
+      <div class="text-right">
+       <p class="text-sm text-slate-400">Instructor</p>
+       <p id="lecturer-name" class="font-semibold text-cyan-400">MKDB</p>
+      </div>
+     </div>
+    </div>
+   </header>
+   <main class="max-w-7xl mx-auto px-6 py-8"><!-- Course Overview -->
+    <section class="mb-12">
+     <div class="card p-8 mb-8">
+      <h2 class="text-3xl font-bold gradient-text mb-4">📚 Course Overview</h2>
+      <p class="text-slate-300 mb-6 text-lg">ITPROFEL3 is a comprehensive course on Advanced Web Applications, focusing on modern frontend frameworks and development practices.</p><!-- Learning Outcomes -->
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+       <div class="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 rounded-lg p-6">
+        <h3 class="font-bold text-cyan-400 mb-4 text-lg">🎯 Learning Outcomes</h3>
+        <ul class="space-y-3 text-slate-300">
+         <li class="flex items-start gap-3"><span class="text-cyan-400 font-bold mt-1">1.</span> <span>Comprehend Angular concepts and architecture, including MVC and data binding</span></li>
+         <li class="flex items-start gap-3"><span class="text-cyan-400 font-bold mt-1">2.</span> <span>Implement Angular directives, controllers, modules, scopes, and dependency injection</span></li>
+         <li class="flex items-start gap-3"><span class="text-cyan-400 font-bold mt-1">3.</span> <span>Utilize Angular filters, tables, select, and forms in web development</span></li>
+         <li class="flex items-start gap-3"><span class="text-cyan-400 font-bold mt-1">4.</span> <span>Design and develop advanced Angular web applications</span></li>
+        </ul>
+       </div>
+       <div class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-lg p-6">
+        <h3 class="font-bold text-purple-400 mb-4 text-lg">📋 Course Structure</h3>
+        <div class="space-y-2 text-slate-300">
+         <p><strong class="text-purple-400">Duration:</strong> 9 weeks</p>
+         <p><strong class="text-purple-400">Format:</strong> Lectures + Hands-on Labs</p>
+         <p><strong class="text-purple-400">Assessment:</strong> Midterms &amp; Finals</p>
+         <p><strong class="text-purple-400">Instructor:</strong> MKDB</p>
+         <p class="text-sm text-slate-400 mt-4">Each week combines theoretical concepts with practical coding exercises.</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- Midterms Section -->
+    <section class="mb-12">
+     <h2 class="text-2xl font-bold gradient-text mb-6 flex items-center gap-3"><span class="text-3xl">📝</span> Midterm Assessments (Weeks 1-9)</h2>
+     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"><a href="f1.html" class="lesson-link group">
+       <div class="week-label">
+        Week 1
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">Frontend Foundations</h3><p class="text-sm text-slate-400 mt-2">HTML, CSS &amp; DOM Basics</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="f2.html" class="lesson-link group">
+       <div class="week-label">
+        Week 2
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">JavaScript Essentials</h3><p class="text-sm text-slate-400 mt-2">Functions, Objects &amp; Events</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="f3.html" class="lesson-link group">
+       <div class="week-label">
+        Week 3
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">Advanced JavaScript</h3><p class="text-sm text-slate-400 mt-2">Async, Promises &amp; APIs</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="f4.html" class="lesson-link group">
+       <div class="week-label">
+        Week 4
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">UI &amp; Frontend Development</h3><p class="text-sm text-slate-400 mt-2">Interactive Web Experiences</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="w5.html" class="lesson-link group">
+       <div class="week-label">
+        Week 5
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">Angular Basics</h3><p class="text-sm text-slate-400 mt-2">Framework Fundamentals</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="w6.html" class="lesson-link group">
+       <div class="week-label">
+        Week 6
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">Angular Components</h3><p class="text-sm text-slate-400 mt-2">Building Reusable Parts</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="f7.html" class="lesson-link group">
+       <div class="week-label">
+        Week 7
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">Angular Forms</h3><p class="text-sm text-slate-400 mt-2">Form Handling &amp; Validation</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="f8.html" class="lesson-link group">
+       <div class="week-label">
+        Week 8
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">Angular Services</h3><p class="text-sm text-slate-400 mt-2">Data Management &amp; APIs</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="f9.html" class="lesson-link group">
+       <div class="week-label">
+        Week 9
+       </div><h3 class="font-bold text-lg text-cyan-400 group-hover:text-cyan-300">Advanced Angular</h3><p class="text-sm text-slate-400 mt-2">Routing &amp; Optimization</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a>
+     </div>
+    </section><!-- Finals Section -->
+    <section class="mb-12">
+     <h2 class="text-2xl font-bold gradient-text mb-6 flex items-center gap-3"><span class="text-3xl">🏆</span> Final Assessments</h2>
+     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"><a href="w1.html" class="lesson-link group">
+       <div class="week-label bg-gradient-to-r from-yellow-500 to-orange-500">
+        Weeks 1-3
+       </div><h3 class="font-bold text-lg text-purple-400 group-hover:text-purple-300">Frontend &amp; JavaScript</h3><p class="text-sm text-slate-400 mt-2">Comprehensive Assessment</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="w4.html" class="lesson-link group">
+       <div class="week-label bg-gradient-to-r from-yellow-500 to-orange-500">
+        Week 4
+       </div><h3 class="font-bold text-lg text-purple-400 group-hover:text-purple-300">UI Development Final</h3><p class="text-sm text-slate-400 mt-2">Frontend Mastery</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="w5.html" class="lesson-link group">
+       <div class="week-label bg-gradient-to-r from-yellow-500 to-orange-500">
+        Week 5
+       </div><h3 class="font-bold text-lg text-purple-400 group-hover:text-purple-300">Angular Basics Final</h3><p class="text-sm text-slate-400 mt-2">Framework Knowledge</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="w6.html" class="lesson-link group">
+       <div class="week-label bg-gradient-to-r from-yellow-500 to-orange-500">
+        Week 6
+       </div><h3 class="font-bold text-lg text-purple-400 group-hover:text-purple-300">Components Final</h3><p class="text-sm text-slate-400 mt-2">Architecture Design</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="w7.html" class="lesson-link group">
+       <div class="week-label bg-gradient-to-r from-yellow-500 to-orange-500">
+        Week 7
+       </div><h3 class="font-bold text-lg text-purple-400 group-hover:text-purple-300">Forms Final</h3><p class="text-sm text-slate-400 mt-2">Form Mastery</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="w8.html" class="lesson-link group">
+       <div class="week-label bg-gradient-to-r from-yellow-500 to-orange-500">
+        Week 8
+       </div><h3 class="font-bold text-lg text-purple-400 group-hover:text-purple-300">Services Final</h3><p class="text-sm text-slate-400 mt-2">Backend Integration</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a> <a href="w9.html" class="lesson-link group">
+       <div class="week-label bg-gradient-to-r from-yellow-500 to-orange-500">
+        Week 9
+       </div><h3 class="font-bold text-lg text-purple-400 group-hover:text-purple-300">Advanced Final</h3><p class="text-sm text-slate-400 mt-2">Complete Application</p>
+       <div class="text-2xl mt-4">
+        →
+       </div></a>
+     </div>
+    </section><!-- Quick Links -->
+    <section class="mb-12">
+     <div class="grid md:grid-cols-3 gap-6">
+      <div class="card p-6">
+       <h3 class="text-xl font-bold text-cyan-400 mb-4">📖 Course Materials</h3>
+       <p class="text-slate-300 text-sm mb-4">Access all lecture notes, code examples, and resources for each week.</p><button onclick="alert('Course materials available in each week\'s lesson page')" class="text-cyan-400 hover:text-cyan-300 font-semibold text-sm">View Materials →</button>
+      </div>
+      <div class="card p-6">
+       <h3 class="text-xl font-bold text-purple-400 mb-4">🎓 Grading Info</h3>
+       <p class="text-slate-300 text-sm mb-4">Midterms: 40% | Finals: 60% | Participation &amp; Labs: 10%</p><button onclick="alert('Contact instructor for grade inquiries')" class="text-purple-400 hover:text-purple-300 font-semibold text-sm">Learn More →</button>
+      </div>
+      <div class="card p-6">
+       <h3 class="text-xl font-bold text-pink-400 mb-4">❓ Need Help?</h3>
+       <p class="text-slate-300 text-sm mb-4">Office hours: Tuesdays &amp; Thursdays, 2-4 PM</p><button onclick="alert('Email: mkdb@university.edu')" class="text-pink-400 hover:text-pink-300 font-semibold text-sm">Contact →</button>
+      </div>
+     </div>
+    </section>
+   </main><!-- HTML Section -->
+   <section id="html" class="section-content fade-in">
+    <div class="card p-6 mb-6">
+     <h2 class="text-2xl font-bold mb-4 gradient-text">🏗️ HTML: The Foundation</h2>
+     <p class="text-slate-300 mb-6">HTML (HyperText Markup Language) defines the structure and content of web pages. Think of it as the <strong class="text-sky-400">skeleton</strong> of your website.</p><!-- Analogy Box -->
+     <div class="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/30 rounded-lg p-4 mb-6">
+      <h3 class="font-bold text-orange-400 mb-2">🏠 Real-World Analogy: Building a House</h3>
+      <p class="text-slate-300">HTML is like the <strong>blueprint and framework</strong> of a house. It defines where the rooms are, where doors go, and how spaces connect. Without it, you can't have a house!</p>
+     </div>
+     <h3 class="text-lg font-bold mb-3 text-sky-400">Semantic HTML Elements</h3>
+     <p class="text-slate-400 mb-4">Semantic elements clearly describe their meaning to both the browser and developers.</p>
+     <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="code-block">
+       <div class="bg-slate-800 px-4 py-2 text-sm text-slate-400 border-b border-slate-700">
+        ❌ Non-Semantic (Bad)
+       </div>
+       <pre class="code-font text-sm"><span class="highlight-tag">&lt;div</span> <span class="highlight-attr">id=</span><span class="highlight-string">"header"</span><span class="highlight-tag">&gt;</span>
+  <span class="highlight-tag">&lt;div</span> <span class="highlight-attr">class=</span><span class="highlight-string">"nav"</span><span class="highlight-tag">&gt;</span>...<span class="highlight-tag">&lt;/div&gt;</span>
+<span class="highlight-tag">&lt;/div&gt;</span>
+<span class="highlight-tag">&lt;div</span> <span class="highlight-attr">id=</span><span class="highlight-string">"main"</span><span class="highlight-tag">&gt;</span>
+  <span class="highlight-tag">&lt;div</span> <span class="highlight-attr">class=</span><span class="highlight-string">"article"</span><span class="highlight-tag">&gt;</span>...<span class="highlight-tag">&lt;/div&gt;</span>
+<span class="highlight-tag">&lt;/div&gt;</span>
+<span class="highlight-tag">&lt;div</span> <span class="highlight-attr">id=</span><span class="highlight-string">"footer"</span><span class="highlight-tag">&gt;</span>...<span class="highlight-tag">&lt;/div&gt;</span></pre>
+      </div>
+      <div class="code-block">
+       <div class="bg-green-900/30 px-4 py-2 text-sm text-green-400 border-b border-green-700/30">
+        ✓ Semantic (Good)
+       </div>
+       <pre class="code-font text-sm"><span class="highlight-tag">&lt;header&gt;</span>
+  <span class="highlight-tag">&lt;nav&gt;</span>...<span class="highlight-tag">&lt;/nav&gt;</span>
+<span class="highlight-tag">&lt;/header&gt;</span>
+<span class="highlight-tag">&lt;main&gt;</span>
+  <span class="highlight-tag">&lt;article&gt;</span>...<span class="highlight-tag">&lt;/article&gt;</span>
+<span class="highlight-tag">&lt;/main&gt;</span>
+<span class="highlight-tag">&lt;footer&gt;</span>...<span class="highlight-tag">&lt;/footer&gt;</span></pre>
+      </div>
+     </div><!-- Semantic Elements Reference -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">Key Semantic Elements</h3>
+     <div class="grid md:grid-cols-3 gap-3">
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;header&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Introductory content, logo, navigation</p>
+      </div>
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;nav&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Navigation links</p>
+      </div>
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;main&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Main content (one per page)</p>
+      </div>
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;article&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Self-contained content</p>
+      </div>
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;section&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Thematic grouping</p>
+      </div>
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;aside&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Sidebar content</p>
+      </div>
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;footer&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Footer content, copyright</p>
+      </div>
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;figure&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Images with captions</p>
+      </div>
+      <div class="bg-slate-800/50 p-3 rounded-lg"><code class="text-orange-400">&lt;time&gt;</code>
+       <p class="text-xs text-slate-400 mt-1">Dates and times</p>
+      </div>
+     </div>
+    </div><!-- Forms Section -->
+    <div class="card p-6">
+     <h3 class="text-lg font-bold mb-4 text-sky-400">📝 HTML Forms: Collecting User Data</h3>
+     <p class="text-slate-400 mb-4">Forms are essential for user interaction - login, registration, search, contact forms, etc.</p>
+     <div class="code-block mb-4">
+      <div class="bg-slate-800 px-4 py-2 text-sm text-slate-400 border-b border-slate-700">
+       Complete Form Example
+      </div>
+      <pre class="code-font text-sm"><span class="highlight-tag">&lt;form</span> <span class="highlight-attr">id=</span><span class="highlight-string">"contactForm"</span> <span class="highlight-attr">action=</span><span class="highlight-string">"/submit"</span> <span class="highlight-attr">method=</span><span class="highlight-string">"POST"</span><span class="highlight-tag">&gt;</span>
+  <span class="highlight-tag">&lt;label</span> <span class="highlight-attr">for=</span><span class="highlight-string">"name"</span><span class="highlight-tag">&gt;</span>Full Name:<span class="highlight-tag">&lt;/label&gt;</span>
+  <span class="highlight-tag">&lt;input</span> <span class="highlight-attr">type=</span><span class="highlight-string">"text"</span> <span class="highlight-attr">id=</span><span class="highlight-string">"name"</span> <span class="highlight-attr">name=</span><span class="highlight-string">"name"</span> <span class="highlight-attr">required</span><span class="highlight-tag">&gt;</span>
+
+  <span class="highlight-tag">&lt;label</span> <span class="highlight-attr">for=</span><span class="highlight-string">"email"</span><span class="highlight-tag">&gt;</span>Email:<span class="highlight-tag">&lt;/label&gt;</span>
+  <span class="highlight-tag">&lt;input</span> <span class="highlight-attr">type=</span><span class="highlight-string">"email"</span> <span class="highlight-attr">id=</span><span class="highlight-string">"email"</span> <span class="highlight-attr">name=</span><span class="highlight-string">"email"</span> <span class="highlight-attr">required</span><span class="highlight-tag">&gt;</span>
+
+  <span class="highlight-tag">&lt;label</span> <span class="highlight-attr">for=</span><span class="highlight-string">"message"</span><span class="highlight-tag">&gt;</span>Message:<span class="highlight-tag">&lt;/label&gt;</span>
+  <span class="highlight-tag">&lt;textarea</span> <span class="highlight-attr">id=</span><span class="highlight-string">"message"</span> <span class="highlight-attr">name=</span><span class="highlight-string">"message"</span> <span class="highlight-attr">rows=</span><span class="highlight-string">"4"</span><span class="highlight-tag">&gt;&lt;/textarea&gt;</span>
+
+  <span class="highlight-tag">&lt;button</span> <span class="highlight-attr">type=</span><span class="highlight-string">"submit"</span><span class="highlight-tag">&gt;</span>Send Message<span class="highlight-tag">&lt;/button&gt;</span>
+<span class="highlight-tag">&lt;/form&gt;</span></pre>
+     </div>
+     <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+      <h4 class="font-bold text-blue-400 mb-2">💡 Key Form Attributes</h4>
+      <ul class="text-sm text-slate-300 space-y-1">
+       <li><code class="text-orange-400">required</code> - Field must be filled</li>
+       <li><code class="text-orange-400">placeholder</code> - Hint text inside input</li>
+       <li><code class="text-orange-400">pattern</code> - Regex validation</li>
+       <li><code class="text-orange-400">min/max</code> - Number range limits</li>
+       <li><code class="text-orange-400">disabled</code> - Prevents interaction</li>
+      </ul>
+     </div>
+    </div>
+   </section><!-- CSS Section -->
+   <section id="css" class="section-content fade-in">
+    <div class="card p-6 mb-6">
+     <h2 class="text-2xl font-bold mb-4 gradient-text">🎨 CSS: The Styling Layer</h2>
+     <p class="text-slate-300 mb-6">CSS (Cascading Style Sheets) controls the visual presentation of HTML elements. It's the <strong class="text-sky-400">paint, furniture, and decoration</strong> of your website.</p>
+     <div class="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-lg p-4 mb-6">
+      <h3 class="font-bold text-blue-400 mb-2">🏠 Real-World Analogy: Interior Design</h3>
+      <p class="text-slate-300">If HTML is the house structure, CSS is the <strong>interior designer</strong>. It decides the colors of walls, the style of furniture, how rooms are arranged, and the overall aesthetic.</p>
+     </div><!-- CSS Selectors -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">CSS Selectors</h3>
+     <div class="code-block mb-6">
+      <pre class="code-font text-sm"><span class="highlight-comment">/* Element Selector */</span>
+<span class="highlight-tag">p</span> { <span class="highlight-attr">color</span>: <span class="highlight-string">blue</span>; }
+
+<span class="highlight-comment">/* Class Selector (reusable) */</span>
+<span class="highlight-function">.card</span> { <span class="highlight-attr">padding</span>: <span class="highlight-value">20px</span>; }
+
+<span class="highlight-comment">/* ID Selector (unique) */</span>
+<span class="highlight-keyword">#header</span> { <span class="highlight-attr">background</span>: <span class="highlight-string">#333</span>; }
+
+<span class="highlight-comment">/* Descendant Selector */</span>
+<span class="highlight-tag">nav</span> <span class="highlight-tag">a</span> { <span class="highlight-attr">text-decoration</span>: <span class="highlight-string">none</span>; }
+
+<span class="highlight-comment">/* Pseudo-class (states) */</span>
+<span class="highlight-tag">button</span><span class="highlight-function">:hover</span> { <span class="highlight-attr">background</span>: <span class="highlight-string">darkblue</span>; }
+
+<span class="highlight-comment">/* Attribute Selector */</span>
+<span class="highlight-tag">input</span>[<span class="highlight-attr">type</span>=<span class="highlight-string">"email"</span>] { <span class="highlight-attr">border-color</span>: <span class="highlight-string">green</span>; }</pre>
+     </div><!-- Box Model -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">📦 The Box Model</h3>
+     <p class="text-slate-400 mb-4">Every HTML element is a rectangular box with four layers:</p>
+     <div class="flex justify-center mb-6">
+      <div class="bg-orange-500/30 p-6 rounded-lg text-center">
+       <p class="text-orange-400 text-sm mb-2">Margin (outside spacing)</p>
+       <div class="bg-yellow-500/30 p-6 rounded-lg">
+        <p class="text-yellow-400 text-sm mb-2">Border</p>
+        <div class="bg-green-500/30 p-6 rounded-lg">
+         <p class="text-green-400 text-sm mb-2">Padding (inside spacing)</p>
+         <div class="bg-blue-500/50 p-6 rounded-lg">
+          <p class="text-blue-400 font-bold">Content</p>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="code-block mb-6">
+      <pre class="code-font text-sm"><span class="highlight-function">.box</span> {
+  <span class="highlight-attr">width</span>: <span class="highlight-value">300px</span>;
+  <span class="highlight-attr">padding</span>: <span class="highlight-value">20px</span>;       <span class="highlight-comment">/* Space inside the border */</span>
+  <span class="highlight-attr">border</span>: <span class="highlight-value">2px solid #333</span>;
+  <span class="highlight-attr">margin</span>: <span class="highlight-value">10px</span>;        <span class="highlight-comment">/* Space outside the border */</span>
+  <span class="highlight-attr">box-sizing</span>: <span class="highlight-string">border-box</span>; <span class="highlight-comment">/* Include padding in width */</span>
+}</pre>
+     </div>
+    </div><!-- Flexbox & Grid -->
+    <div class="card p-6 mb-6">
+     <h3 class="text-lg font-bold mb-4 text-sky-400">📐 Modern Layouts: Flexbox &amp; Grid</h3>
+     <div class="grid md:grid-cols-2 gap-6"><!-- Flexbox -->
+      <div>
+       <h4 class="font-bold text-purple-400 mb-3">Flexbox (1-Dimensional)</h4>
+       <p class="text-sm text-slate-400 mb-3">Perfect for rows OR columns of items</p>
+       <div class="code-block mb-3">
+        <pre class="code-font text-xs"><span class="highlight-function">.flex-container</span> {
+  <span class="highlight-attr">display</span>: <span class="highlight-string">flex</span>;
+  <span class="highlight-attr">justify-content</span>: <span class="highlight-string">space-between</span>;
+  <span class="highlight-attr">align-items</span>: <span class="highlight-string">center</span>;
+  <span class="highlight-attr">gap</span>: <span class="highlight-value">20px</span>;
+}</pre>
+       </div>
+       <div class="flex justify-between items-center gap-2 p-3 bg-slate-800 rounded-lg">
+        <div class="w-12 h-12 bg-purple-500 rounded flex items-center justify-center text-xs">
+         1
+        </div>
+        <div class="w-12 h-12 bg-purple-500 rounded flex items-center justify-center text-xs">
+         2
+        </div>
+        <div class="w-12 h-12 bg-purple-500 rounded flex items-center justify-center text-xs">
+         3
+        </div>
+       </div>
+      </div><!-- Grid -->
+      <div>
+       <h4 class="font-bold text-green-400 mb-3">CSS Grid (2-Dimensional)</h4>
+       <p class="text-sm text-slate-400 mb-3">Perfect for complex layouts with rows AND columns</p>
+       <div class="code-block mb-3">
+        <pre class="code-font text-xs"><span class="highlight-function">.grid-container</span> {
+  <span class="highlight-attr">display</span>: <span class="highlight-string">grid</span>;
+  <span class="highlight-attr">grid-template-columns</span>: <span class="highlight-string">repeat(3, 1fr)</span>;
+  <span class="highlight-attr">gap</span>: <span class="highlight-value">10px</span>;
+}</pre>
+       </div>
+       <div class="grid grid-cols-3 gap-2 p-3 bg-slate-800 rounded-lg">
+        <div class="h-8 bg-green-500 rounded flex items-center justify-center text-xs">
+         1
+        </div>
+        <div class="h-8 bg-green-500 rounded flex items-center justify-center text-xs">
+         2
+        </div>
+        <div class="h-8 bg-green-500 rounded flex items-center justify-center text-xs">
+         3
+        </div>
+        <div class="h-8 bg-green-500 rounded flex items-center justify-center text-xs">
+         4
+        </div>
+        <div class="h-8 bg-green-500 rounded flex items-center justify-center text-xs">
+         5
+        </div>
+        <div class="h-8 bg-green-500 rounded flex items-center justify-center text-xs">
+         6
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Responsive Design -->
+    <div class="card p-6">
+     <h3 class="text-lg font-bold mb-4 text-sky-400">📱 Responsive Design</h3>
+     <p class="text-slate-400 mb-4">Make your website look great on ALL devices using media queries.</p>
+     <div class="code-block mb-4">
+      <pre class="code-font text-sm"><span class="highlight-comment">/* Mobile First Approach */</span>
+<span class="highlight-function">.container</span> {
+  <span class="highlight-attr">width</span>: <span class="highlight-value">100%</span>;
+  <span class="highlight-attr">padding</span>: <span class="highlight-value">10px</span>;
+}
+
+<span class="highlight-comment">/* Tablet (768px and up) */</span>
+<span class="highlight-keyword">@media</span> (<span class="highlight-attr">min-width</span>: <span class="highlight-value">768px</span>) {
+  <span class="highlight-function">.container</span> {
+    <span class="highlight-attr">width</span>: <span class="highlight-value">750px</span>;
+    <span class="highlight-attr">margin</span>: <span class="highlight-value">0 auto</span>;
+  }
+}
+
+<span class="highlight-comment">/* Desktop (1024px and up) */</span>
+<span class="highlight-keyword">@media</span> (<span class="highlight-attr">min-width</span>: <span class="highlight-value">1024px</span>) {
+  <span class="highlight-function">.container</span> {
+    <span class="highlight-attr">width</span>: <span class="highlight-value">960px</span>;
+  }
+}</pre>
+     </div>
+     <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+      <h4 class="font-bold text-yellow-400 mb-2">📏 Common Breakpoints</h4>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+       <div>
+        <span class="text-slate-400">Mobile:</span> <code class="text-green-400">&lt; 640px</code>
+       </div>
+       <div>
+        <span class="text-slate-400">Tablet:</span> <code class="text-green-400">≥ 768px</code>
+       </div>
+       <div>
+        <span class="text-slate-400">Laptop:</span> <code class="text-green-400">≥ 1024px</code>
+       </div>
+       <div>
+        <span class="text-slate-400">Desktop:</span> <code class="text-green-400">≥ 1280px</code>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- DOM Section -->
+   <section id="dom" class="section-content fade-in">
+    <div class="card p-6 mb-6">
+     <h2 class="text-2xl font-bold mb-4 gradient-text">⚡ JavaScript DOM Manipulation</h2>
+     <p class="text-slate-300 mb-6">The DOM (Document Object Model) is a tree-like representation of your HTML that JavaScript can interact with. It's how you make pages <strong class="text-sky-400">interactive and dynamic</strong>.</p>
+     <div class="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 rounded-lg p-4 mb-6">
+      <h3 class="font-bold text-yellow-400 mb-2">🎮 Real-World Analogy: Remote Control</h3>
+      <p class="text-slate-300">The DOM is like a <strong>remote control for your webpage</strong>. Just as a remote lets you change TV channels, volume, and settings, the DOM API lets you change text, colors, add/remove elements, and respond to user actions.</p>
+     </div><!-- DOM Tree Visualization -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">🌳 The DOM Tree Structure</h3>
+     <div class="bg-slate-800/50 p-4 rounded-lg mb-6">
+      <div class="code-font text-sm">
+       <div class="text-purple-400">
+        document
+       </div>
+       <div class="ml-4 text-orange-400">
+        └── html
+       </div>
+       <div class="ml-8 text-blue-400">
+        ├── head
+       </div>
+       <div class="ml-12 text-slate-400">
+        │ ├── title
+       </div>
+       <div class="ml-12 text-slate-400">
+        │ └── link
+       </div>
+       <div class="ml-8 text-green-400">
+        └── body
+       </div>
+       <div class="ml-12 text-slate-400">
+        ├── header
+       </div>
+       <div class="ml-12 text-slate-400">
+        ├── main
+       </div>
+       <div class="ml-12 text-slate-400">
+        │ └── article
+       </div>
+       <div class="ml-12 text-slate-400">
+        └── footer
+       </div>
+      </div>
+     </div><!-- Selecting Elements -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">🎯 Selecting Elements</h3>
+     <div class="code-block mb-6">
+      <pre class="code-font text-sm"><span class="highlight-comment">// Select by ID (returns single element)</span>
+<span class="highlight-keyword">const</span> header = <span class="highlight-function">document.getElementById</span>(<span class="highlight-string">'header'</span>);
+
+<span class="highlight-comment">// Select by class (returns collection)</span>
+<span class="highlight-keyword">const</span> cards = <span class="highlight-function">document.getElementsByClassName</span>(<span class="highlight-string">'card'</span>);
+
+<span class="highlight-comment">// Modern: Query Selector (CSS syntax)</span>
+<span class="highlight-keyword">const</span> btn = <span class="highlight-function">document.querySelector</span>(<span class="highlight-string">'.btn-primary'</span>);
+<span class="highlight-keyword">const</span> allBtns = <span class="highlight-function">document.querySelectorAll</span>(<span class="highlight-string">'button'</span>);
+
+<span class="highlight-comment">// Complex selectors work too!</span>
+<span class="highlight-keyword">const</span> activeItems = <span class="highlight-function">document.querySelectorAll</span>(<span class="highlight-string">'nav .active'</span>);</pre>
+     </div><!-- Modifying Elements -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">✏️ Modifying Elements</h3>
+     <div class="code-block mb-6">
+      <pre class="code-font text-sm"><span class="highlight-keyword">const</span> title = <span class="highlight-function">document.querySelector</span>(<span class="highlight-string">'h1'</span>);
+
+<span class="highlight-comment">// Change text content</span>
+title.<span class="highlight-attr">textContent</span> = <span class="highlight-string">'New Title'</span>;
+
+<span class="highlight-comment">// Change HTML inside element</span>
+title.<span class="highlight-attr">innerHTML</span> = <span class="highlight-string">'&lt;span&gt;Styled&lt;/span&gt; Title'</span>;
+
+<span class="highlight-comment">// Modify styles directly</span>
+title.<span class="highlight-attr">style</span>.<span class="highlight-attr">color</span> = <span class="highlight-string">'blue'</span>;
+title.<span class="highlight-attr">style</span>.<span class="highlight-attr">fontSize</span> = <span class="highlight-string">'24px'</span>;
+
+<span class="highlight-comment">// Add/Remove CSS classes (preferred method)</span>
+title.<span class="highlight-attr">classList</span>.<span class="highlight-function">add</span>(<span class="highlight-string">'highlight'</span>);
+title.<span class="highlight-attr">classList</span>.<span class="highlight-function">remove</span>(<span class="highlight-string">'old-class'</span>);
+title.<span class="highlight-attr">classList</span>.<span class="highlight-function">toggle</span>(<span class="highlight-string">'active'</span>);
+
+<span class="highlight-comment">// Modify attributes</span>
+<span class="highlight-keyword">const</span> img = <span class="highlight-function">document.querySelector</span>(<span class="highlight-string">'img'</span>);
+img.<span class="highlight-function">setAttribute</span>(<span class="highlight-string">'src'</span>, <span class="highlight-string">'new-image.jpg'</span>);
+img.<span class="highlight-function">setAttribute</span>(<span class="highlight-string">'alt'</span>, <span class="highlight-string">'Description'</span>);</pre>
+     </div><!-- Creating Elements -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">➕ Creating &amp; Removing Elements</h3>
+     <div class="code-block mb-6">
+      <pre class="code-font text-sm"><span class="highlight-comment">// Create a new element</span>
+<span class="highlight-keyword">const</span> newCard = <span class="highlight-function">document.createElement</span>(<span class="highlight-string">'div'</span>);
+newCard.<span class="highlight-attr">className</span> = <span class="highlight-string">'card'</span>;
+newCard.<span class="highlight-attr">innerHTML</span> = <span class="highlight-string">`
+  &lt;h3&gt;New Card Title&lt;/h3&gt;
+  &lt;p&gt;Card content goes here&lt;/p&gt;
+`</span>;
+
+<span class="highlight-comment">// Add to the DOM</span>
+<span class="highlight-keyword">const</span> container = <span class="highlight-function">document.querySelector</span>(<span class="highlight-string">'.container'</span>);
+container.<span class="highlight-function">appendChild</span>(newCard);       <span class="highlight-comment">// Add at end</span>
+container.<span class="highlight-function">prepend</span>(newCard);          <span class="highlight-comment">// Add at beginning</span>
+container.<span class="highlight-function">insertBefore</span>(newCard, ref); <span class="highlight-comment">// Add before reference</span>
+
+<span class="highlight-comment">// Remove elements</span>
+newCard.<span class="highlight-function">remove</span>();  <span class="highlight-comment">// Modern way</span>
+container.<span class="highlight-function">removeChild</span>(newCard);  <span class="highlight-comment">// Old way</span></pre>
+     </div>
+    </div><!-- Event Handling -->
+    <div class="card p-6">
+     <h3 class="text-lg font-bold mb-4 text-sky-400">🎯 Event Handling</h3>
+     <p class="text-slate-400 mb-4">Events are actions that happen in the browser: clicks, key presses, form submissions, etc.</p>
+     <div class="code-block mb-6">
+      <pre class="code-font text-sm"><span class="highlight-comment">// Method 1: addEventListener (Recommended)</span>
+<span class="highlight-keyword">const</span> button = <span class="highlight-function">document.querySelector</span>(<span class="highlight-string">'#myBtn'</span>);
+
+button.<span class="highlight-function">addEventListener</span>(<span class="highlight-string">'click'</span>, <span class="highlight-keyword">function</span>(event) {
+  <span class="highlight-function">console.log</span>(<span class="highlight-string">'Button clicked!'</span>);
+  <span class="highlight-function">console.log</span>(event.target);  <span class="highlight-comment">// The clicked element</span>
+});
+
+<span class="highlight-comment">// Arrow function syntax</span>
+button.<span class="highlight-function">addEventListener</span>(<span class="highlight-string">'click'</span>, (e) =&gt; {
+  e.<span class="highlight-function">preventDefault</span>();  <span class="highlight-comment">// Stop default action</span>
+  <span class="highlight-comment">// Your code here</span>
+});
+
+<span class="highlight-comment">// Common Events:</span>
+<span class="highlight-comment">// 'click'      - Mouse click</span>
+<span class="highlight-comment">// 'submit'     - Form submission</span>
+<span class="highlight-comment">// 'input'      - Input field changes</span>
+<span class="highlight-comment">// 'keydown'    - Key pressed</span>
+<span class="highlight-comment">// 'mouseover'  - Mouse enters element</span>
+<span class="highlight-comment">// 'load'       - Page/resource loaded</span></pre>
+     </div><!-- Event Delegation -->
+     <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+      <h4 class="font-bold text-green-400 mb-2">💡 Pro Tip: Event Delegation</h4>
+      <p class="text-sm text-slate-300 mb-3">Instead of adding listeners to many elements, add ONE to their parent:</p>
+      <div class="code-block">
+       <pre class="code-font text-xs"><span class="highlight-comment">// Instead of adding click to every button...</span>
+<span class="highlight-keyword">const</span> container = <span class="highlight-function">document.querySelector</span>(<span class="highlight-string">'.buttons'</span>);
+
+container.<span class="highlight-function">addEventListener</span>(<span class="highlight-string">'click'</span>, (e) =&gt; {
+  <span class="highlight-keyword">if</span> (e.target.<span class="highlight-function">matches</span>(<span class="highlight-string">'button'</span>)) {
+    <span class="highlight-function">console.log</span>(<span class="highlight-string">'Button ID:'</span>, e.target.id);
+  }
+});</pre>
+      </div>
+     </div>
+    </div>
+   </section><!-- AJAX & Fetch Section -->
+   <section id="ajax" class="section-content fade-in">
+    <div class="card p-6 mb-6">
+     <h2 class="text-2xl font-bold mb-4 gradient-text">🌐 AJAX &amp; Fetch API</h2>
+     <p class="text-slate-300 mb-6">AJAX (Asynchronous JavaScript and XML) allows web pages to communicate with servers <strong class="text-sky-400">without reloading</strong>. The Fetch API is the modern way to do this.</p>
+     <div class="bg-gradient-to-r from-green-500/10 to-teal-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
+      <h3 class="font-bold text-green-400 mb-2">🍕 Real-World Analogy: Food Delivery App</h3>
+      <p class="text-slate-300">AJAX is like a <strong>food delivery app</strong>. You don't go to the restaurant (reload page). Instead, you send a request through the app (AJAX call), and food arrives at your door (data returns). You continue doing other things while waiting!</p>
+     </div><!-- Synchronous vs Asynchronous -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">⏱️ Synchronous vs Asynchronous</h3>
+     <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-lg">
+       <h4 class="font-bold text-red-400 mb-2">❌ Synchronous (Blocking)</h4>
+       <p class="text-sm text-slate-400">Each task must complete before the next starts. The page FREEZES while waiting.</p>
+       <div class="mt-3 space-y-2">
+        <div class="flex items-center gap-2">
+         <div class="w-full bg-red-500/30 h-6 rounded text-xs flex items-center px-2">
+          Task 1
+         </div>
+        </div>
+        <div class="flex items-center gap-2">
+         <div class="w-full bg-red-500/30 h-6 rounded text-xs flex items-center px-2">
+          Wait...
+         </div>
+        </div>
+        <div class="flex items-center gap-2">
+         <div class="w-full bg-red-500/30 h-6 rounded text-xs flex items-center px-2">
+          Task 2
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="bg-green-500/10 border border-green-500/30 p-4 rounded-lg">
+       <h4 class="font-bold text-green-400 mb-2">✓ Asynchronous (Non-Blocking)</h4>
+       <p class="text-sm text-slate-400">Tasks run in parallel. The page stays RESPONSIVE while waiting.</p>
+       <div class="mt-3 space-y-2">
+        <div class="flex items-center gap-2">
+         <div class="w-1/2 bg-green-500/30 h-6 rounded text-xs flex items-center px-2">
+          Task 1
+         </div>
+         <div class="w-1/2 bg-blue-500/30 h-6 rounded text-xs flex items-center px-2">
+          Fetch Data
+         </div>
+        </div>
+        <div class="flex items-center gap-2">
+         <div class="w-1/2 bg-green-500/30 h-6 rounded text-xs flex items-center px-2">
+          Task 2
+         </div>
+         <div class="w-1/2 bg-blue-500/30 h-6 rounded text-xs flex items-center px-2">
+          Still fetching...
+         </div>
+        </div>
+        <div class="flex items-center gap-2">
+         <div class="w-1/2 bg-green-500/30 h-6 rounded text-xs flex items-center px-2">
+          Task 3
+         </div>
+         <div class="w-1/2 bg-purple-500/30 h-6 rounded text-xs flex items-center px-2">
+          Data arrived!
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Basic Fetch -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">📡 The Fetch API</h3>
+     <div class="code-block mb-6">
+      <div class="bg-slate-800 px-4 py-2 text-sm text-slate-400 border-b border-slate-700">
+       Basic GET Request
+      </div>
+      <pre class="code-font text-sm"><span class="highlight-comment">// Fetch returns a Promise</span>
+<span class="highlight-function">fetch</span>(<span class="highlight-string">'https://api.example.com/users'</span>)
+  .<span class="highlight-function">then</span>(response =&gt; {
+    <span class="highlight-keyword">if</span> (!response.ok) {
+      <span class="highlight-keyword">throw new</span> <span class="highlight-function">Error</span>(<span class="highlight-string">'Network response was not ok'</span>);
+    }
+    <span class="highlight-keyword">return</span> response.<span class="highlight-function">json</span>();  <span class="highlight-comment">// Parse JSON</span>
+  })
+  .<span class="highlight-function">then</span>(data =&gt; {
+    <span class="highlight-function">console.log</span>(data);  <span class="highlight-comment">// Use the data</span>
+    <span class="highlight-function">displayUsers</span>(data);
+  })
+  .<span class="highlight-function">catch</span>(error =&gt; {
+    <span class="highlight-function">console.error</span>(<span class="highlight-string">'Error:'</span>, error);
+  });</pre>
+     </div><!-- Async/Await -->
+     <h3 class="text-lg font-bold mb-3 text-sky-400">⚡ Modern Syntax: async/await</h3>
+     <div class="code-block mb-6">
+      <div class="bg-green-900/30 px-4 py-2 text-sm text-green-400 border-b border-green-700/30">
+       Cleaner async/await syntax
+      </div>
+      <pre class="code-font text-sm"><span class="highlight-keyword">async function</span> <span class="highlight-function">fetchUsers</span>() {
+  <span class="highlight-keyword">try</span> {
+    <span class="highlight-comment">// Show loading state</span>
+    <span class="highlight-function">showLoading</span>();
+    
+    <span class="highlight-keyword">const</span> response = <span class="highlight-keyword">await</span> <span class="highlight-function">fetch</span>(<span class="highlight-string">'https://api.example.com/users'</span>);
+    
+    <span class="highlight-keyword">if</span> (!response.ok) {
+      <span class="highlight-keyword">throw new</span> <span class="highlight-function">Error</span>(<span class="highlight-string">`HTTP error! status: ${response.status}`</span>);
+    }
+    
+    <span class="highlight-keyword">const</span> users = <span class="highlight-keyword">await</span> response.<span class="highlight-function">json</span>();
+    <span class="highlight-function">displayUsers</span>(users);
+    
+  } <span class="highlight-keyword">catch</span> (error) {
+    <span class="highlight-function">showError</span>(error.message);
+  } <span class="highlight-keyword">finally</span> {
+    <span class="highlight-function">hideLoading</span>();
+  }
+}
+
+<span class="highlight-comment">// Call the function</span>
+<span class="highlight-function">fetchUsers</span>();</pre>
+     </div>
+    </div><!-- HTTP Methods -->
+    <div class="card p-6 mb-6">
+     <h3 class="text-lg font-bold mb-4 text-sky-400">📮 HTTP Methods (CRUD Operations)</h3>
+     <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-green-500/10 p-4 rounded-lg">
+       <h4 class="font-bold text-green-400">GET - Read</h4>
+       <p class="text-sm text-slate-400">Retrieve data from server</p>
+      </div>
+      <div class="bg-blue-500/10 p-4 rounded-lg">
+       <h4 class="font-bold text-blue-400">POST - Create</h4>
+       <p class="text-sm text-slate-400">Send new data to server</p>
+      </div>
+      <div class="bg-yellow-500/10 p-4 rounded-lg">
+       <h4 class="font-bold text-yellow-400">PUT/PATCH - Update</h4>
+       <p class="text-sm text-slate-400">Modify existing data</p>
+      </div>
+      <div class="bg-red-500/10 p-4 rounded-lg">
+       <h4 class="font-bold text-red-400">DELETE - Delete</h4>
+       <p class="text-sm text-slate-400">Remove data from server</p>
+      </div>
+     </div>
+     <div class="code-block">
+      <div class="bg-slate-800 px-4 py-2 text-sm text-slate-400 border-b border-slate-700">
+       POST Request Example
+      </div>
+      <pre class="code-font text-sm"><span class="highlight-keyword">async function</span> <span class="highlight-function">createUser</span>(userData) {
+  <span class="highlight-keyword">const</span> response = <span class="highlight-keyword">await</span> <span class="highlight-function">fetch</span>(<span class="highlight-string">'https://api.example.com/users'</span>, {
+    <span class="highlight-attr">method</span>: <span class="highlight-string">'POST'</span>,
+    <span class="highlight-attr">headers</span>: {
+      <span class="highlight-string">'Content-Type'</span>: <span class="highlight-string">'application/json'</span>,
+    },
+    <span class="highlight-attr">body</span>: JSON.<span class="highlight-function">stringify</span>(userData)
+  });
+  
+  <span class="highlight-keyword">const</span> newUser = <span class="highlight-keyword">await</span> response.<span class="highlight-function">json</span>();
+  <span class="highlight-keyword">return</span> newUser;
+}
+
+<span class="highlight-comment">// Usage</span>
+<span class="highlight-function">createUser</span>({ 
+  <span class="highlight-attr">name</span>: <span class="highlight-string">'John Doe'</span>, 
+  <span class="highlight-attr">email</span>: <span class="highlight-string">'john@example.com'</span> 
+});</pre>
+     </div>
+    </div><!-- Free APIs -->
+    <div class="card p-6">
+     <h3 class="text-lg font-bold mb-4 text-sky-400">🔗 Free APIs for Practice</h3>
+     <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-slate-800/50 p-4 rounded-lg">
+       <h4 class="font-semibold text-purple-400">JSONPlaceholder</h4><code class="text-xs text-slate-400 block mt-1">https://jsonplaceholder.typicode.com</code>
+       <p class="text-xs text-slate-500 mt-2">Fake REST API for testing</p>
+      </div>
+      <div class="bg-slate-800/50 p-4 rounded-lg">
+       <h4 class="font-semibold text-purple-400">PokeAPI</h4><code class="text-xs text-slate-400 block mt-1">https://pokeapi.co/api/v2</code>
+       <p class="text-xs text-slate-500 mt-2">Pokemon data API</p>
+      </div>
+      <div class="bg-slate-800/50 p-4 rounded-lg">
+       <h4 class="font-semibold text-purple-400">Open Weather</h4><code class="text-xs text-slate-400 block mt-1">https://openweathermap.org/api</code>
+       <p class="text-xs text-slate-500 mt-2">Weather data (free tier)</p>
+      </div>
+      <div class="bg-slate-800/50 p-4 rounded-lg">
+       <h4 class="font-semibold text-purple-400">REST Countries</h4><code class="text-xs text-slate-400 block mt-1">https://restcountries.com</code>
+       <p class="text-xs text-slate-500 mt-2">Country information</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- Demo Section -->
+   <section id="demo" class="section-content fade-in">
+    <div class="card p-6 mb-6">
+     <h2 class="text-2xl font-bold mb-4 gradient-text">🛠️ Step-by-Step Demo: User Directory App</h2>
+     <p class="text-slate-300 mb-6">Let's build a complete application that fetches users from an API and displays them with search and filter functionality.</p><!-- Step 1 -->
+     <div class="mb-8">
+      <div class="flex items-start gap-4 mb-4">
+       <div class="step-number">
+        1
+       </div>
+       <div>
+        <h3 class="text-lg font-bold text-sky-400">HTML Structure</h3>
+        <p class="text-slate-400 text-sm">Create the semantic HTML skeleton</p>
+       </div>
+      </div>
+      <div class="code-block">
+       <pre class="code-font text-sm"><span class="highlight-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="highlight-tag">&lt;html</span> <span class="highlight-attr">lang=</span><span class="highlight-string">"en"</span><span class="highlight-tag">&gt;</span>
+<span class="highlight-tag">&lt;head&gt;</span>
+  <span class="highlight-tag">&lt;meta</span> <span class="highlight-attr">charset=</span><span class="highlight-string">"UTF-8"</span><span class="highlight-tag">&gt;</span>
+  <span class="highlight-tag">&lt;meta</span> <span class="highlight-attr">name=</span><span class="highlight-string">"viewport"</span> <span class="highlight-attr">content=</span><span class="highlight-string">"width=device-width, initial-scale=1.0"</span><span class="highlight-tag">&gt;</span>
+  <span class="highlight-tag">&lt;title&gt;</span>User Directory<span class="highlight-tag">&lt;/title&gt;</span>
+  <span class="highlight-tag">&lt;link</span> <span class="highlight-attr">rel=</span><span class="highlight-string">"stylesheet"</span> <span class="highlight-attr">href=</span><span class="highlight-string">"styles.css"</span><span class="highlight-tag">&gt;</span>
+<span class="highlight-tag">&lt;/head&gt;</span>
+<span class="highlight-tag">&lt;body&gt;</span>
+  <span class="highlight-tag">&lt;header&gt;</span>
+    <span class="highlight-tag">&lt;h1&gt;</span>👥 User Directory<span class="highlight-tag">&lt;/h1&gt;</span>
+    <span class="highlight-tag">&lt;div</span> <span class="highlight-attr">class=</span><span class="highlight-string">"search-box"</span><span class="highlight-tag">&gt;</span>
+      <span class="highlight-tag">&lt;input</span> <span class="highlight-attr">type=</span><span class="highlight-string">"text"</span> <span class="highlight-attr">id=</span><span class="highlight-string">"searchInput"</span> <span class="highlight-attr">placeholder=</span><span class="highlight-string">"Search users..."</span><span class="highlight-tag">&gt;</span>
+    <span class="highlight-tag">&lt;/div&gt;</span>
+  <span class="highlight-tag">&lt;/header&gt;</span>
+  
+  <span class="highlight-tag">&lt;main&gt;</span>
+    <span class="highlight-tag">&lt;div</span> <span class="highlight-attr">id=</span><span class="highlight-string">"loading"</span> <span class="highlight-attr">class=</span><span class="highlight-string">"loading"</span><span class="highlight-tag">&gt;</span>Loading users...<span class="highlight-tag">&lt;/div&gt;</span>
+    <span class="highlight-tag">&lt;div</span> <span class="highlight-attr">id=</span><span class="highlight-string">"error"</span> <span class="highlight-attr">class=</span><span class="highlight-string">"error hidden"</span><span class="highlight-tag">&gt;&lt;/div&gt;</span>
+    <span class="highlight-tag">&lt;div</span> <span class="highlight-attr">id=</span><span class="highlight-string">"userGrid"</span> <span class="highlight-attr">class=</span><span class="highlight-string">"user-grid"</span><span class="highlight-tag">&gt;&lt;/div&gt;</span>
+  <span class="highlight-tag">&lt;/main&gt;</span>
+  
+  <span class="highlight-tag">&lt;script</span> <span class="highlight-attr">src=</span><span class="highlight-string">"app.js"</span><span class="highlight-tag">&gt;&lt;/script&gt;</span>
+<span class="highlight-tag">&lt;/body&gt;</span>
+<span class="highlight-tag">&lt;/html&gt;</span></pre>
+      </div>
+     </div><!-- Step 2 -->
+     <div class="mb-8">
+      <div class="flex items-start gap-4 mb-4">
+       <div class="step-number">
+        2
+       </div>
+       <div>
+        <h3 class="text-lg font-bold text-sky-400">CSS Styling</h3>
+        <p class="text-slate-400 text-sm">Style the layout with CSS Grid and modern design</p>
+       </div>
+      </div>
+      <div class="code-block">
+       <pre class="code-font text-sm"><span class="highlight-comment">/* Base Styles */</span>
+* {
+  <span class="highlight-attr">box-sizing</span>: <span class="highlight-string">border-box</span>;
+  <span class="highlight-attr">margin</span>: <span class="highlight-value">0</span>;
+  <span class="highlight-attr">padding</span>: <span class="highlight-value">0</span>;
+}
+
+<span class="highlight-tag">body</span> {
+  <span class="highlight-attr">font-family</span>: <span class="highlight-string">'Segoe UI', sans-serif</span>;
+  <span class="highlight-attr">background</span>: <span class="highlight-string">#f5f5f5</span>;
+  <span class="highlight-attr">min-height</span>: <span class="highlight-value">100%</span>;
+}
+
+<span class="highlight-comment">/* Header */</span>
+<span class="highlight-tag">header</span> {
+  <span class="highlight-attr">background</span>: <span class="highlight-string">linear-gradient(135deg, #667eea, #764ba2)</span>;
+  <span class="highlight-attr">color</span>: <span class="highlight-string">white</span>;
+  <span class="highlight-attr">padding</span>: <span class="highlight-value">2rem</span>;
+  <span class="highlight-attr">text-align</span>: <span class="highlight-string">center</span>;
+}
+
+<span class="highlight-comment">/* Search Box */</span>
+<span class="highlight-function">.search-box</span> <span class="highlight-tag">input</span> {
+  <span class="highlight-attr">width</span>: <span class="highlight-value">100%</span>;
+  <span class="highlight-attr">max-width</span>: <span class="highlight-value">400px</span>;
+  <span class="highlight-attr">padding</span>: <span class="highlight-value">12px 20px</span>;
+  <span class="highlight-attr">border</span>: <span class="highlight-string">none</span>;
+  <span class="highlight-attr">border-radius</span>: <span class="highlight-value">25px</span>;
+  <span class="highlight-attr">font-size</span>: <span class="highlight-value">16px</span>;
+  <span class="highlight-attr">margin-top</span>: <span class="highlight-value">1rem</span>;
+}
+
+<span class="highlight-comment">/* User Grid - Responsive */</span>
+<span class="highlight-function">.user-grid</span> {
+  <span class="highlight-attr">display</span>: <span class="highlight-string">grid</span>;
+  <span class="highlight-attr">grid-template-columns</span>: <span class="highlight-string">repeat(auto-fill, minmax(280px, 1fr))</span>;
+  <span class="highlight-attr">gap</span>: <span class="highlight-value">20px</span>;
+  <span class="highlight-attr">padding</span>: <span class="highlight-value">2rem</span>;
+}
+
+<span class="highlight-comment">/* User Card */</span>
+<span class="highlight-function">.user-card</span> {
+  <span class="highlight-attr">background</span>: <span class="highlight-string">white</span>;
+  <span class="highlight-attr">border-radius</span>: <span class="highlight-value">12px</span>;
+  <span class="highlight-attr">padding</span>: <span class="highlight-value">1.5rem</span>;
+  <span class="highlight-attr">box-shadow</span>: <span class="highlight-string">0 2px 10px rgba(0,0,0,0.1)</span>;
+  <span class="highlight-attr">transition</span>: <span class="highlight-string">transform 0.2s, box-shadow 0.2s</span>;
+}
+
+<span class="highlight-function">.user-card</span><span class="highlight-keyword">:hover</span> {
+  <span class="highlight-attr">transform</span>: <span class="highlight-string">translateY(-5px)</span>;
+  <span class="highlight-attr">box-shadow</span>: <span class="highlight-string">0 5px 20px rgba(0,0,0,0.15)</span>;
+}</pre>
+      </div>
+     </div><!-- Step 3 -->
+     <div class="mb-8">
+      <div class="flex items-start gap-4 mb-4">
+       <div class="step-number">
+        3
+       </div>
+       <div>
+        <h3 class="text-lg font-bold text-sky-400">JavaScript - Fetch Data</h3>
+        <p class="text-slate-400 text-sm">Create the fetch function with error handling</p>
+       </div>
+      </div>
+      <div class="code-block">
+       <pre class="code-font text-sm"><span class="highlight-comment">// Store users globally for filtering</span>
+<span class="highlight-keyword">let</span> allUsers = [];
+
+<span class="highlight-comment">// DOM Elements</span>
+<span class="highlight-keyword">const</span> userGrid = <span class="highlight-function">document.getElementById</span>(<span class="highlight-string">'userGrid'</span>);
+<span class="highlight-keyword">const</span> loading = <span class="highlight-function">document.getElementById</span>(<span class="highlight-string">'loading'</span>);
+<span class="highlight-keyword">const</span> errorDiv = <span class="highlight-function">document.getElementById</span>(<span class="highlight-string">'error'</span>);
+<span class="highlight-keyword">const</span> searchInput = <span class="highlight-function">document.getElementById</span>(<span class="highlight-string">'searchInput'</span>);
+
+<span class="highlight-comment">// Fetch users from API</span>
+<span class="highlight-keyword">async function</span> <span class="highlight-function">fetchUsers</span>() {
+  <span class="highlight-keyword">try</span> {
+    loading.classList.<span class="highlight-function">remove</span>(<span class="highlight-string">'hidden'</span>);
+    errorDiv.classList.<span class="highlight-function">add</span>(<span class="highlight-string">'hidden'</span>);
+    
+    <span class="highlight-keyword">const</span> response = <span class="highlight-keyword">await</span> <span class="highlight-function">fetch</span>(
+      <span class="highlight-string">'https://jsonplaceholder.typicode.com/users'</span>
+    );
+    
+    <span class="highlight-keyword">if</span> (!response.ok) {
+      <span class="highlight-keyword">throw new</span> <span class="highlight-function">Error</span>(<span class="highlight-string">`HTTP error! status: ${response.status}`</span>);
+    }
+    
+    allUsers = <span class="highlight-keyword">await</span> response.<span class="highlight-function">json</span>();
+    <span class="highlight-function">displayUsers</span>(allUsers);
+    
+  } <span class="highlight-keyword">catch</span> (error) {
+    errorDiv.textContent = <span class="highlight-string">`Error: ${error.message}`</span>;
+    errorDiv.classList.<span class="highlight-function">remove</span>(<span class="highlight-string">'hidden'</span>);
+  } <span class="highlight-keyword">finally</span> {
+    loading.classList.<span class="highlight-function">add</span>(<span class="highlight-string">'hidden'</span>);
+  }
+}
+
+<span class="highlight-comment">// Initialize on page load</span>
+<span class="highlight-function">fetchUsers</span>();</pre>
+      </div>
+     </div><!-- Step 4 -->
+     <div class="mb-8">
+      <div class="flex items-start gap-4 mb-4">
+       <div class="step-number">
+        4
+       </div>
+       <div>
+        <h3 class="text-lg font-bold text-sky-400">JavaScript - Display Users</h3>
+        <p class="text-slate-400 text-sm">Create user cards dynamically using DOM manipulation</p>
+       </div>
+      </div>
+      <div class="code-block">
+       <pre class="code-font text-sm"><span class="highlight-comment">// Display users in the grid</span>
+<span class="highlight-keyword">function</span> <span class="highlight-function">displayUsers</span>(users) {
+  <span class="highlight-comment">// Clear existing content</span>
+  userGrid.innerHTML = <span class="highlight-string">''</span>;
+  
+  <span class="highlight-keyword">if</span> (users.length === <span class="highlight-value">0</span>) {
+    userGrid.innerHTML = <span class="highlight-string">'&lt;p class="no-results"&gt;No users found&lt;/p&gt;'</span>;
+    <span class="highlight-keyword">return</span>;
+  }
+  
+  <span class="highlight-comment">// Create card for each user</span>
+  users.<span class="highlight-function">forEach</span>(user =&gt; {
+    <span class="highlight-keyword">const</span> card = <span class="highlight-function">createUserCard</span>(user);
+    userGrid.<span class="highlight-function">appendChild</span>(card);
+  });
+}
+
+<span class="highlight-comment">// Create a single user card element</span>
+<span class="highlight-keyword">function</span> <span class="highlight-function">createUserCard</span>(user) {
+  <span class="highlight-keyword">const</span> card = <span class="highlight-function">document.createElement</span>(<span class="highlight-string">'article'</span>);
+  card.className = <span class="highlight-string">'user-card'</span>;
+  card.dataset.userId = user.id;
+  
+  card.innerHTML = <span class="highlight-string">`
+    &lt;div class="user-avatar"&gt;
+      ${user.name.charAt(0).toUpperCase()}
+    &lt;/div&gt;
+    &lt;h3 class="user-name"&gt;${user.name}&lt;/h3&gt;
+    &lt;p class="user-email"&gt;📧 ${user.email}&lt;/p&gt;
+    &lt;p class="user-company"&gt;🏢 ${user.company.name}&lt;/p&gt;
+    &lt;p class="user-city"&gt;📍 ${user.address.city}&lt;/p&gt;
+    &lt;button class="view-btn" onclick="viewUser(${user.id})"&gt;
+      View Details
+    &lt;/button&gt;
+  `</span>;
+  
+  <span class="highlight-keyword">return</span> card;
+}</pre>
+      </div>
+     </div><!-- Step 5 -->
+     <div>
+      <div class="flex items-start gap-4 mb-4">
+       <div class="step-number">
+        5
+       </div>
+       <div>
+        <h3 class="text-lg font-bold text-sky-400">JavaScript - Search Functionality</h3>
+        <p class="text-slate-400 text-sm">Add real-time search filtering</p>
+       </div>
+      </div>
+      <div class="code-block">
+       <pre class="code-font text-sm"><span class="highlight-comment">// Search functionality with debounce</span>
+<span class="highlight-keyword">let</span> searchTimeout;
+
+searchInput.<span class="highlight-function">addEventListener</span>(<span class="highlight-string">'input'</span>, (e) =&gt; {
+  <span class="highlight-comment">// Debounce: wait 300ms after typing stops</span>
+  <span class="highlight-function">clearTimeout</span>(searchTimeout);
+  
+  searchTimeout = <span class="highlight-function">setTimeout</span>(() =&gt; {
+    <span class="highlight-keyword">const</span> searchTerm = e.target.value.<span class="highlight-function">toLowerCase</span>();
+    <span class="highlight-function">filterUsers</span>(searchTerm);
+  }, <span class="highlight-value">300</span>);
+});
+
+<span class="highlight-comment">// Filter users based on search term</span>
+<span class="highlight-keyword">function</span> <span class="highlight-function">filterUsers</span>(searchTerm) {
+  <span class="highlight-keyword">const</span> filtered = allUsers.<span class="highlight-function">filter</span>(user =&gt; {
+    <span class="highlight-keyword">return</span> (
+      user.name.<span class="highlight-function">toLowerCase</span>().<span class="highlight-function">includes</span>(searchTerm) ||
+      user.email.<span class="highlight-function">toLowerCase</span>().<span class="highlight-function">includes</span>(searchTerm) ||
+      user.company.name.<span class="highlight-function">toLowerCase</span>().<span class="highlight-function">includes</span>(searchTerm)
+    );
+  });
+  
+  <span class="highlight-function">displayUsers</span>(filtered);
+}
+
+<span class="highlight-comment">// View single user details</span>
+<span class="highlight-keyword">function</span> <span class="highlight-function">viewUser</span>(userId) {
+  <span class="highlight-keyword">const</span> user = allUsers.<span class="highlight-function">find</span>(u =&gt; u.id === userId);
+  <span class="highlight-keyword">if</span> (user) {
+    <span class="highlight-comment">// Could open a modal or navigate to detail page</span>
+    <span class="highlight-function">console.log</span>(<span class="highlight-string">'Selected user:'</span>, user);
+  }
+}</pre>
+      </div>
+     </div>
+    </div><!-- Live Demo Preview -->
+    <div class="card p-6">
+     <h3 class="text-lg font-bold mb-4 text-sky-400">🖥️ Live Demo Preview</h3>
+     <div class="demo-container" id="liveDemo">
+      <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; text-align: center;">
+       <h2 style="margin: 0 0 1rem 0; font-size: 1.5rem;">👥 User Directory</h2><input type="text" id="demoSearch" placeholder="Search users..." style="width: 100%; max-width: 300px; padding: 10px 16px; border: none; border-radius: 20px; font-size: 14px;">
+      </div>
+      <div id="demoGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; padding: 1.5rem; background: #f5f5f5;"></div>
+     </div>
+    </div>
+   </section><!-- Activities Section -->
+   <section id="activities" class="section-content fade-in">
+    <div class="card p-6 mb-6">
+     <h2 class="text-2xl font-bold mb-4 gradient-text">📝 Group Activities</h2>
+     <p class="text-slate-300 mb-6">Work in groups of 3-4 students. Each activity builds upon your frontend development skills and requires collaboration.</p>
+     <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-6">
+      <h3 class="font-bold text-yellow-400 mb-2">⚠️ Important Notes</h3>
+      <ul class="text-sm text-slate-300 space-y-1">
+       <li>• Each group member must contribute to the code</li>
+       <li>• Use Git for version control (recommended)</li>
+       <li>• Be prepared to explain your code decisions</li>
+       <li>• Time limits are strict - manage your time wisely</li>
+      </ul>
+     </div>
+    </div><!-- Activity 1 -->
+    <div class="activity-card card p-6 mb-6">
+     <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-bold text-sky-400">🏋️ Activity 1: Interactive Product Catalog</h3><span class="bg-orange-500/20 text-orange-400 px-3 py-1 rounded-full text-sm font-semibold">Medium-Hard</span>
+     </div>
+     <p class="text-slate-300 mb-4">Build a product catalog that fetches data from an API and implements filtering, sorting, and search functionality.</p>
+     <div class="accordion mb-4"><button class="accordion-btn w-full text-left p-4 bg-slate-800/50 rounded-lg flex items-center justify-between" onclick="toggleAccordion(this)"> <span class="font-semibold">📋 Requirements (Click to expand)</span> <span class="accordion-icon">▼</span> </button>
+      <div class="accordion-content">
+       <div class="p-4 bg-slate-800/30 rounded-b-lg">
+        <h4 class="font-bold text-sky-400 mb-3">Functional Requirements:</h4>
+        <ul class="text-sm text-slate-300 space-y-2 mb-4">
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Fetch products from: <code class="text-orange-400">https://fakestoreapi.com/products</code></span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Display products in a responsive grid (at least 3 columns on desktop)</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Implement category filter using: <code class="text-orange-400">/products/categories</code></span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Add price range filter (min/max input fields)</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Implement sorting by: Price (Low→High, High→Low), Rating, Name</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Add real-time search functionality (debounced)</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Show loading spinner while fetching</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Handle and display errors gracefully</span></li>
+        </ul>
+        <h4 class="font-bold text-sky-400 mb-3">Technical Requirements:</h4>
+        <ul class="text-sm text-slate-300 space-y-2 mb-4">
+         <li class="flex items-start gap-2"><span class="text-purple-400">•</span> <span>Use semantic HTML elements (<code>&lt;main&gt;, &lt;article&gt;, &lt;section&gt;</code>)</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-400">•</span> <span>CSS Grid or Flexbox for layouts</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-400">•</span> <span>Use async/await with proper error handling</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-400">•</span> <span>No frameworks - vanilla JavaScript only</span></li>
+        </ul>
+        <h4 class="font-bold text-sky-400 mb-3">Bonus Points (+10%):</h4>
+        <ul class="text-sm text-slate-300 space-y-1">
+         <li>• Add "Add to Cart" functionality with cart counter</li>
+         <li>• Implement product detail modal on click</li>
+         <li>• Add rating stars visualization</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4"><span class="text-sm text-slate-400">⏱️ Time: <strong class="text-white">75 minutes</strong></span> <span class="text-sm text-slate-400">👥 Group Size: <strong class="text-white">3-4</strong></span>
+      </div>
+      <div class="text-sm text-slate-400">
+       Points: <strong class="text-sky-400">100</strong>
+      </div>
+     </div>
+    </div><!-- Activity 2 -->
+    <div class="activity-card card p-6 mb-6">
+     <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-bold text-sky-400">🌤️ Activity 2: Weather Dashboard</h3><span class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-semibold">Hard</span>
+     </div>
+     <p class="text-slate-300 mb-4">Create a weather dashboard that displays current weather and forecasts for multiple cities using the OpenWeatherMap API.</p>
+     <div class="accordion mb-4"><button class="accordion-btn w-full text-left p-4 bg-slate-800/50 rounded-lg flex items-center justify-between" onclick="toggleAccordion(this)"> <span class="font-semibold">📋 Requirements (Click to expand)</span> <span class="accordion-icon">▼</span> </button>
+      <div class="accordion-content">
+       <div class="p-4 bg-slate-800/30 rounded-b-lg">
+        <h4 class="font-bold text-sky-400 mb-3">Functional Requirements:</h4>
+        <ul class="text-sm text-slate-300 space-y-2 mb-4">
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Search for cities by name with autocomplete suggestions</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Display current weather: temperature, humidity, wind speed, weather icon</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Show 5-day forecast with daily high/low temperatures</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Allow users to save "favorite" cities (store in localStorage)</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Toggle between Celsius and Fahrenheit</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Display weather-appropriate background colors/images</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Show last updated timestamp</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Handle API errors (city not found, rate limit, etc.)</span></li>
+        </ul>
+        <h4 class="font-bold text-sky-400 mb-3">API Information:</h4>
+        <div class="bg-slate-900/50 p-3 rounded-lg mb-4">
+         <p class="text-sm text-slate-400 mb-2">Use OpenWeatherMap free tier (or alternative):</p><code class="text-xs text-orange-400 block">https://api.openweathermap.org/data/2.5/weather?q={city}&amp;appid={API_KEY}</code>
+         <p class="text-xs text-slate-500 mt-2">Note: Sign up for free API key at openweathermap.org</p>
+        </div>
+        <h4 class="font-bold text-sky-400 mb-3">UI Requirements:</h4>
+        <ul class="text-sm text-slate-300 space-y-1 mb-4">
+         <li>• Responsive design (mobile-first)</li>
+         <li>• Visual weather icons (can use emoji or icon library)</li>
+         <li>• Smooth transitions when switching cities</li>
+         <li>• Clear visual hierarchy</li>
+        </ul>
+        <h4 class="font-bold text-sky-400 mb-3">Bonus Points (+15%):</h4>
+        <ul class="text-sm text-slate-300 space-y-1">
+         <li>• Add geolocation to detect user's current city</li>
+         <li>• Implement hourly forecast carousel</li>
+         <li>• Add weather alerts if available</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4"><span class="text-sm text-slate-400">⏱️ Time: <strong class="text-white">90 minutes</strong></span> <span class="text-sm text-slate-400">👥 Group Size: <strong class="text-white">3-4</strong></span>
+      </div>
+      <div class="text-sm text-slate-400">
+       Points: <strong class="text-sky-400">120</strong>
+      </div>
+     </div>
+    </div><!-- Activity 3 -->
+    <div class="activity-card card p-6 mb-6">
+     <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-bold text-sky-400">📊 Activity 3: Real-Time Data Dashboard</h3><span class="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-sm font-semibold">Hard</span>
+     </div>
+     <p class="text-slate-300 mb-4">Build a dashboard that polls an API at regular intervals and updates the UI dynamically without page refresh.</p>
+     <div class="accordion mb-4"><button class="accordion-btn w-full text-left p-4 bg-slate-800/50 rounded-lg flex items-center justify-between" onclick="toggleAccordion(this)"> <span class="font-semibold">📋 Requirements (Click to expand)</span> <span class="accordion-icon">▼</span> </button>
+      <div class="accordion-content">
+       <div class="p-4 bg-slate-800/30 rounded-b-lg">
+        <h4 class="font-bold text-sky-400 mb-3">Scenario Options (Choose ONE):</h4>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+         <div class="bg-slate-900/50 p-3 rounded-lg">
+          <h5 class="font-semibold text-purple-400 mb-2">A) Crypto Price Tracker</h5>
+          <p class="text-xs text-slate-400">Track top 10 cryptocurrencies with real-time price updates</p><code class="text-xs text-orange-400 block mt-2">coingecko.com/api (free)</code>
+         </div>
+         <div class="bg-slate-900/50 p-3 rounded-lg">
+          <h5 class="font-semibold text-purple-400 mb-2">B) GitHub Activity Feed</h5>
+          <p class="text-xs text-slate-400">Display recent commits/events from a repository</p><code class="text-xs text-orange-400 block mt-2">api.github.com (free)</code>
+         </div>
+        </div>
+        <h4 class="font-bold text-sky-400 mb-3">Core Requirements:</h4>
+        <ul class="text-sm text-slate-300 space-y-2 mb-4">
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Fetch data from chosen API on page load</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Implement auto-refresh every 30 seconds (configurable)</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Show visual indicator when data is updating (without blocking UI)</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Highlight changed values (green for increase, red for decrease)</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Add pause/resume polling button</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Show "last updated" timestamp with countdown to next refresh</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Implement efficient DOM updates (don't re-render entire list)</span></li>
+         <li class="flex items-start gap-2"><span class="text-green-400">□</span> <span>Handle network errors gracefully with retry mechanism</span></li>
+        </ul>
+        <h4 class="font-bold text-sky-400 mb-3">Technical Challenges:</h4>
+        <ul class="text-sm text-slate-300 space-y-1 mb-4">
+         <li>• Use setInterval for polling (but clear on component unmount)</li>
+         <li>• Compare old vs new data to detect changes</li>
+         <li>• Implement request cancellation if new request starts</li>
+        </ul>
+        <h4 class="font-bold text-sky-400 mb-3">Bonus Points (+20%):</h4>
+        <ul class="text-sm text-slate-300 space-y-1">
+         <li>• Add simple line chart showing price history (last 10 data points)</li>
+         <li>• Implement "favorite" items that stick to top</li>
+         <li>• Add notification sound when significant change detected</li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4"><span class="text-sm text-slate-400">⏱️ Time: <strong class="text-white">90 minutes</strong></span> <span class="text-sm text-slate-400">👥 Group Size: <strong class="text-white">3-4</strong></span>
+      </div>
+      <div class="text-sm text-slate-400">
+       Points: <strong class="text-sky-400">130</strong>
+      </div>
+     </div>
+    </div><!-- Grading Rubric -->
+    <div class="card p-6">
+     <h3 class="text-xl font-bold mb-4 text-sky-400">📊 Grading Rubric</h3>
+     <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+       <thead>
+        <tr class="border-b border-slate-700">
+         <th class="text-left py-3 px-4 text-slate-400">Criteria</th>
+         <th class="text-center py-3 px-4 text-slate-400">Excellent (90-100%)</th>
+         <th class="text-center py-3 px-4 text-slate-400">Good (70-89%)</th>
+         <th class="text-center py-3 px-4 text-slate-400">Needs Work (&lt;70%)</th>
+        </tr>
+       </thead>
+       <tbody class="text-slate-300">
+        <tr class="border-b border-slate-800">
+         <td class="py-3 px-4 font-semibold">Functionality (40%)</td>
+         <td class="py-3 px-4 text-center text-green-400">All features work perfectly</td>
+         <td class="py-3 px-4 text-center text-yellow-400">Most features work</td>
+         <td class="py-3 px-4 text-center text-red-400">Major features broken</td>
+        </tr>
+        <tr class="border-b border-slate-800">
+         <td class="py-3 px-4 font-semibold">Code Quality (25%)</td>
+         <td class="py-3 px-4 text-center text-green-400">Clean, organized, well-commented</td>
+         <td class="py-3 px-4 text-center text-yellow-400">Readable but could improve</td>
+         <td class="py-3 px-4 text-center text-red-400">Messy, hard to follow</td>
+        </tr>
+        <tr class="border-b border-slate-800">
+         <td class="py-3 px-4 font-semibold">UI/UX Design (20%)</td>
+         <td class="py-3 px-4 text-center text-green-400">Professional, responsive</td>
+         <td class="py-3 px-4 text-center text-yellow-400">Functional but basic</td>
+         <td class="py-3 px-4 text-center text-red-400">Poor layout/usability</td>
+        </tr>
+        <tr>
+         <td class="py-3 px-4 font-semibold">Error Handling (15%)</td>
+         <td class="py-3 px-4 text-center text-green-400">All edge cases handled</td>
+         <td class="py-3 px-4 text-center text-yellow-400">Basic error handling</td>
+         <td class="py-3 px-4 text-center text-red-400">Errors crash the app</td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="border-t border-cyan-500/20 py-6 px-6 text-center text-slate-500 text-sm">
+    <p>ITPROFEL3 - Advanced Web Applications | Instructor: MKDB | © 2024</p>
+    <p class="mt-2">Welcome to your comprehensive learning journey! 🚀</p>
+   </footer>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      course_title: 'ITPROFEL3 - Advanced Web Applications',
+      lecturer_name: 'MKDB',
+      background_color: '#0a0e27',
+      surface_color: '#1a1f3a',
+      text_color: '#f0f4f8',
+      primary_action: '#00d4ff',
+      secondary_action: '#7c3aed'
+    };
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          // Update title
+          const titleEl = document.getElementById('course-title');
+          if (titleEl) {
+            titleEl.textContent = config.course_title || defaultConfig.course_title;
+          }
+          
+          // Update lecturer name
+          const lecturerEl = document.getElementById('lecturer-name');
+          if (lecturerEl) {
+            lecturerEl.textContent = config.lecturer_name || defaultConfig.lecturer_name;
+          }
+          
+          // Update colors
+          document.documentElement.style.setProperty('--bg-primary', config.background_color || defaultConfig.background_color);
+          document.documentElement.style.setProperty('--bg-secondary', config.surface_color || defaultConfig.surface_color);
+          document.documentElement.style.setProperty('--text-primary', config.text_color || defaultConfig.text_color);
+          document.documentElement.style.setProperty('--accent-primary', config.primary_action || defaultConfig.primary_action);
+          document.documentElement.style.setProperty('--accent-secondary', config.secondary_action || defaultConfig.secondary_action);
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => window.elementSdk.setConfig({ background_color: value })
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => window.elementSdk.setConfig({ surface_color: value })
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            },
+            {
+              get: () => config.primary_action || defaultConfig.primary_action,
+              set: (value) => window.elementSdk.setConfig({ primary_action: value })
+            },
+            {
+              get: () => config.secondary_action || defaultConfig.secondary_action,
+              set: (value) => window.elementSdk.setConfig({ secondary_action: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['course_title', config.course_title || defaultConfig.course_title],
+          ['lecturer_name', config.lecturer_name || defaultConfig.lecturer_name]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d80eaec677d039f',t:'MTc3Mjc5NTQ2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
